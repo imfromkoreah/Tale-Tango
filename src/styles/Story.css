@@ -1,0 +1,130 @@
+/* Main container */
+.main-container {
+  width: 1600px;      /* 너비 */
+  height: 900px;      /* 높이 */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);  /* 여전히 가운데 정렬 유지 */
+  background-image: url('https://via.placeholder.com/1600x900');
+  background-size: cover;
+  background-position: center;
+  border-radius: 20px; /* 모서리 둥글게 */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; /* 세로로 위에 맞추기 */
+  padding: 20px;
+}
+
+/* 선택 항목들을 한 줄에 가로로 정렬하기 위한 flexbox */
+.selected-items-container {
+  display: flex;
+  justify-content: flex-start; /* 왼쪽부터 정렬 */
+  gap: 20px; /* 카드 간격 */
+  width: 100%;
+  overflow-x: auto; /* 가로 스크롤이 가능하도록 */
+  margin-bottom: 20px;
+}
+
+/* 선택된 등장인물 리스트 */
+.character-list {
+  display: flex;
+  gap: 20px; /* 카드 간격 */
+  flex-shrink: 0; /* 줄어들지 않도록 */
+}
+
+.character-card {
+  width: 150px; /* 카드 너비 */
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 10px;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.character-card img {
+  width: 100%;
+  border-radius: 10px;
+}
+
+/* 선택된 배경 리스트 */
+.selected-background {
+  display: flex;
+  gap: 20px; /* 카드 간격 */
+  flex-shrink: 0; /* 줄어들지 않도록 */
+}
+
+.background-card {
+  width: 150px; /* 카드 너비 */
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.background-card img {
+  width: 100%;
+  border-radius: 10px;
+}
+
+/* 선택된 이야기 길이 */
+.selected-length {
+  display: flex;
+  gap: 20px; /* 카드 간격 */
+  flex-shrink: 0; /* 줄어들지 않도록 */
+}
+
+.selected-length p {
+  font-size: 20px;
+  color: #fff; /* 텍스트 색상 */
+}
+
+/* 비활성화된 버튼 스타일 (inactive 상태) */
+.inactiveNextButton {
+  background-image: url('../assets/inactiveNextButton.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  width: 85px;
+  height: 85px;
+  cursor: not-allowed;
+  border-radius: 50%;
+  border: none;
+}
+
+/* 활성화된 버튼 스타일 (active 상태) */
+.NextButton {
+  background-image: url('../assets/finishButton.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  width: 85px;
+  height: 85px;
+  cursor: pointer;
+  border-radius: 50%;
+  border: none;
+}
+
+/* 버튼 깜빡이는 효과 */
+.blinking-button {
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* 버튼 위치 조정 */
+.next-button-container {
+  margin-top: 40px;
+  position: relative;
+  top: 100px;
+}
