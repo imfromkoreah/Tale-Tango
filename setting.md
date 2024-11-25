@@ -1,4 +1,4 @@
-my-storytelling-app/
+tango-app/
 ├── public/
 │   ├── index.html
 │   └── logo.png
@@ -7,10 +7,13 @@ my-storytelling-app/
 │   │   └── placeholder.jpg
 │   ├── components/
 │   │   ├── MainPage.js
-│   │   └── StoryPage.js         # 추가 컴포넌트 예시
+│   │   └── StoryPage.js
 │   ├── styles/
 │   │   ├── MainPage.css
-│   │   └── StoryPage.css        # 추가 스타일 예시
+│   │   └── StoryPage.css
 │   ├── App.js
 │   ├── index.js
+├── backend/                # 플라스크 서버를 위한 폴더
+│   ├── app.py              # 플라스크 서버 코드
+│   ├── requirements.txt    # 필요한 파이썬 라이브러리
 └── package.json

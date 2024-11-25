@@ -6,6 +6,7 @@ import SetCharacter from './components/SetCharacter';
 import SetBackground from './components/SetBackground'; 
 import SetLength from './components/SetLength'; 
 import Story from './components/Story'; 
+import Making from './components/Making'; 
 // src/index.js 또는 src/App.js에 추가
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -42,6 +43,7 @@ function App() {
               />
             }
           />
+          <Route path="/making" element={<Making />} />
         </Routes>
       </div>
     </Router>

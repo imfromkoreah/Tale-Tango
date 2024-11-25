@@ -20,7 +20,7 @@ const Story = ({ selectedCharacters, selectedBackgrounds, selectedLength }) => {
         backgroundPosition: 'center',
       }}
     >
-      <div className="main-title">이야기 제작</div>
+      <div className="main-title">이야기 요소</div>
 
       <div className="selected-items-container">
   {/* 선택된 등장인물 */}
