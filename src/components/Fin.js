@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // useNavigate import
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';  // useNavigate import
 import '../styles/MainPage.css'; // 스타일 파일 import
 import placeholderImage from '../assets/background.png';  // 기본 이미지 import
 
@@ -15,6 +15,7 @@ const Fin = () => {
   const navigate = useNavigate(); // 페이지 이동을 위한 navigate 훅
   const [selectedImage, setSelectedImage] = useState('');  // 선택된 이미지 상태 관리
   const [inputText, setInputText] = useState('');  // 카드에 입력된 텍스트 상태 관리
+  const [storyText, setStoryText] = useState('');  // 저장된 이야기 텍스트
 
   // 이미지 선택 처리
   const handleImageClick = (image) => {
@@ -32,11 +33,23 @@ const Fin = () => {
       alert('이야기 제목과 그림을 선택해주세요!');
       return;
     }
-    // 전송 처리 (예: 데이터 저장 또는 다른 페이지로 이동 등)
-    console.log('선택된 이미지:', selectedImage);
-    console.log('입력된 제목:', inputText);
-    navigate('/');  // 예시로 홈 페이지로 이동
+    // selectedImage를 navigate를 통해 MainPage로 전달
+    navigate('/', { state: { selectedImage } });  // state로 selectedImage 전달
   };
+
+  // 컴포넌트가 마운트될 때 서버에서 이야기 텍스트 가져오기
+  useEffect(() => {
+    fetch('http://localhost:5000/get-story')  // 서버에서 txt 파일 가져오기
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.storyText) {
+          setStoryText(data.storyText);  // 파일 내용 저장
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching story:', error);
+      });
+  }, []);
 
   return (
     <div
@@ -63,69 +76,95 @@ const Fin = () => {
           ))}
         </div>
 
-        {/* 선택된 이미지로 배경 설정 */}
-        {selectedImage && (
-          <div
-            style={{
-              width: 350,
-              height: 452,
-              position: 'absolute',
-              top: '380px',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              backgroundImage: `url(${selectedImage})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              borderRadius: 15,
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            {/* 텍스트 입력 영역 */}
-            <input
-              type="text"
-              value={inputText}
-              onChange={handleTextChange}
-              placeholder="이야기 제목을 지어줘"
+        {/* 이미지와 이야기 텍스트를 담을 컨테이너 */}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            position: 'absolute',
+            top: '380px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            gap: '20px', // 이미지와 텍스트 사이의 간격
+          }}
+        >
+          {/* 선택된 이미지로 배경 설정 */}
+          {selectedImage && (
+            <div
               style={{
-                width: '80%',
-                padding: '10px',
-                borderRadius: '8px',
-                textAlign: 'center',
-                border: 'none',
-                fontSize: '25px',
-                backgroundColor: 'rgba(255, 255, 255, 1)',
-              }}
-            />
-            
-            {/* 전송 버튼 */}
-            <button
-              onClick={handleSubmit}
-              disabled={!inputText}  // 제목이 입력되지 않았으면 비활성화
-              style={{
-                marginTop: '20px',
-                padding: '10px 20px',
-                backgroundColor: inputText ? '#4CAF50' : '#E6E6E6',  // 제목 입력 시 활성화
-                color: 'white',
-                border: 'none',
-                borderRadius: '8px',
-                fontSize: '18px',
-                cursor: inputText ? 'pointer' : 'not-allowed',  // 활성화/비활성화 상태에 따라 커서 변경
+                width: 350,
+                height: 490,
+                backgroundImage: `url(${selectedImage})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                borderRadius: 15,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
               }}
             >
-              전송
-            </button>
-          </div>
-        )}
+              {/* 텍스트 입력 영역 */}
+              <input
+                type="text"
+                value={inputText}
+                onChange={handleTextChange}
+                placeholder="이야기 제목을 지어줘"
+                style={{
+                  width: '80%',
+                  padding: '10px',
+                  borderRadius: '8px',
+                  textAlign: 'center',
+                  border: 'none',
+                  fontSize: '25px',
+                  backgroundColor: 'rgba(255, 255, 255, 1)',
+                }}
+              />
+              
+              {/* 전송 버튼 */}
+              <button
+                onClick={handleSubmit}
+                disabled={!inputText}  // 제목이 입력되지 않았으면 비활성화
+                style={{
+                  marginTop: '20px',
+                  padding: '10px 20px',
+                  backgroundColor: inputText ? '#4CAF50' : '#E6E6E6',  // 제목 입력 시 활성화
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  fontSize: '18px',
+                  cursor: inputText ? 'pointer' : 'not-allowed',  // 활성화/비활성화 상태에 따라 커서 변경
+                }}
+              >
+                전송
+              </button>
+            </div>
+          )}
 
-        {/* 선택된 이미지가 없으면 기본 메시지 표시 */}
-        {!selectedImage && (
-          <div style={{ position: 'absolute', top: '600px', left: '50%', transform: 'translateX(-50%)', color: 'white', fontSize: '24px' }}>
-            위에서 그림을 선택해주세요!
-          </div>
-        )}
+          {/* 이야기 텍스트 표시 영역 */}
+          {storyText && (
+            <div
+              style={{
+                width: '350px',
+                height: '452px',
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',  // 불투명 배경
+                borderRadius: '15px',
+                padding: '20px',
+                color: 'white',
+                overflow: 'auto',
+                fontSize: '20px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'flex-start',
+                whiteSpace: 'pre-wrap',  // 줄바꿈 처리
+              }}
+            >
+              <h3>저장된 이야기</h3>
+              <p>{storyText}</p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

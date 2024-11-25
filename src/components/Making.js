@@ -20,6 +20,7 @@ const Making = ({ selectedCharacters, selectedBackgrounds, selectedLength }) => 
   const [isFinished, setIsFinished] = useState(false); // 완료 버튼 상태 관리
   const [isNextEnabled, setIsNextEnabled] = useState(false); // Next 버튼 활성화 상태 관리
   const [storyFilePath, setStoryFilePath] = useState(""); // 파일 경로 상태 관리
+  const [isStoryGenerated, setIsStoryGenerated] = useState(false); // 이야기 생성 여부 상태 관리
 
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
@@ -64,6 +65,8 @@ const Making = ({ selectedCharacters, selectedBackgrounds, selectedLength }) => 
 
   // 생성된 이야기를 서버에서 받아오는 함수 (useCallback을 사용해 재사용 가능하도록 변경)
   const generateStory = useCallback(async () => {
+    if (isStoryGenerated) return; // 이미 이야기가 생성된 경우, 요청하지 않음
+
     console.log('서버로 선택값 전송:', { selectedCharacters, selectedBackgrounds, selectedLength });
     try {
       const response = await axios.post('http://localhost:5000/generate-story', {
@@ -75,10 +78,11 @@ const Making = ({ selectedCharacters, selectedBackgrounds, selectedLength }) => 
       // 생성된 이야기와 파일 경로 받기
       setGeneratedStory(response.data.story);
       setStoryFilePath(response.data.filePath);  // 파일 경로 저장
+      setIsStoryGenerated(true); // 이야기 생성 완료 상태 설정
     } catch (error) {
       console.error('Error generating story:', error);
     }
-  }, [selectedCharacters, selectedBackgrounds, selectedLength]);
+  }, [selectedCharacters, selectedBackgrounds, selectedLength, isStoryGenerated]);
 
   useEffect(() => {
     generateStory(); // 최초 1회 호출

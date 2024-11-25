@@ -62,7 +62,7 @@ app.post('/save-story', (req, res) => {
 
   try {
     // 기존 이야기 파일에 덧붙이기
-    fs.appendFileSync(filePath, `\n\n사용자 추가 내용:\n${storyText}\n`);
+    fs.appendFileSync(filePath, `\n${storyText}\n`);
     console.log(`사용자 입력이 ${filePath}에 덧붙여졌습니다.`);
 
     res.json({ message: '스토리가 덧붙여졌습니다.', filePath });
@@ -157,6 +157,20 @@ async function generateNextStory(previousStoryText) {
     throw new Error('OpenAI API 호출 실패');
   }
 }
+
+// 파일을 클라이언트로 전송하는 엔드포인트 추가
+app.get('/get-story', (req, res) => {
+  const filePath = './stories/generated_story.txt';
+
+  if (fs.existsSync(filePath)) {
+    // 파일이 존재하면 내용을 읽어서 전송
+    const storyText = fs.readFileSync(filePath, 'utf8');
+    res.json({ storyText });
+  } else {
+    res.status(404).json({ error: '스토리 파일을 찾을 수 없습니다.' });
+  }
+});
+
 
 
 
