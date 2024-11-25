@@ -66,9 +66,9 @@ async function generateStory(characters, backgrounds, length) {
           { role: 'system', content: 'You are a children\'s story generator. Your stories should be short, simple, and easy to understand.' },
           { role: 'user', content: prompt },
         ],
-        max_tokens: 100,  // 짧은 동화를 위해 토큰 수를 제한
-        
+        max_tokens: 100,
       });
+      
   
       return response.choices[0].message.content;
   

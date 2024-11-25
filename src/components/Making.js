@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Making.css';
 import placeholderImage from '../assets/background.png';
@@ -53,8 +53,11 @@ const Making = ({ selectedCharacters, selectedBackgrounds, selectedLength }) => 
       console.error('Error generating story:', error);
     }
   };
-  
-  
+
+  // Automatically generate story when the component mounts
+  useEffect(() => {
+    generateStory(); // Call generateStory on page load
+  }, []); // Empty dependency array means this runs once when the component mounts
 
   return (
     <div
@@ -68,7 +71,7 @@ const Making = ({ selectedCharacters, selectedBackgrounds, selectedLength }) => 
       <div className="story-container">
         <div className="overlay" />
         <div className="story-text">
-          {generatedStory || "콩쥐는 수영을 좋아하는 아이였어요. 하루는, 콩쥐는 수영을 하기 위해 바닷가에 나갔어요."}
+          {generatedStory || "잠시만 기다려요..."} 
         </div>
         <div className="white-box">
           <textarea

@@ -159,3 +159,18 @@
   top: 550px;
   transform: translateX(-50%); /* 가운데 정렬 */
 }
+
+.generate-button-container {
+  width: 50px;         /* 컨테이너 너비 줄이기 */
+  height: 30px;        /* 컨테이너 높이 줄이기 */
+  display: flex;       /* flexbox로 버튼을 중앙 정렬 */
+  justify-content: center;
+  align-items: center;
+}
+
+.generate-button-container button {
+  padding: 5px 10px;   /* 버튼의 패딩을 줄여서 크기 작게 */
+  font-size: 12px;      /* 글자 크기 작게 */
+  width: 100%;          /* 버튼이 컨테이너의 전체 너비 차지 */
+  height: 100%;         /* 버튼이 컨테이너의 전체 높이 차지 */
+}
