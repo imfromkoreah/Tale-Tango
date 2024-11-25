@@ -35,6 +35,11 @@ app.post('/generate-story', async (req, res) => {
     // 파일 경로 (여기서는 고정된 파일 이름 사용)
     const filePath = './stories/generated_story.txt';  // 파일명 고정
 
+    // stories 폴더가 없으면 생성
+    if (!fs.existsSync('./stories')) {
+      fs.mkdirSync('./stories');
+    }
+
     // 파일에 저장
     fs.writeFileSync(filePath, story, 'utf8');
     console.log(`이야기가 ${filePath}에 저장되었습니다.`);
@@ -67,42 +72,6 @@ app.post('/save-story', (req, res) => {
   }
 });
 
-// 이야기 이어서 생성하는 Tango 엔드포인트
-app.post('/generate-story2', async (req, res) => {
-  const { previousStoryText } = req.body;
-
-  try {
-    // 기존 이야기와 이어서 새로운 이야기 생성
-    const generatedStory2 = await generateNextStory(previousStoryText);  // 기존 이야기 텍스트를 넘겨받아서 이어서 이야기 생성
-
-    // 생성된 새로운 이야기 반환
-    res.json({ generatedStory2 });
-  } catch (error) {
-    console.error('Error generating next story:', error);
-    res.status(500).json({ error: '새로운 이야기 생성 중 오류가 발생했습니다.' });
-  }
-});
-
-
-
-// 맞춤법 수정 엔드포인트
-app.post('/correct-text', async (req, res) => {
-  const { text } = req.body; // 클라이언트에서 전달된 텍스트
-
-  if (!text) {
-    return res.status(400).json({ error: 'Text is required.' });
-  }
-
-  try {
-    // 맞춤법 및 문법 수정 요청
-    const correctedText = await correctText(text);
-    res.json({ correctedText });
-  } catch (error) {
-    console.error('Error correcting text:', error);
-    res.status(500).json({ error: '맞춤법 수정 중 오류가 발생했습니다.' });
-  }
-});
-
 // 이야기 생성 함수
 async function generateStory(characters, backgrounds, length) {
   try {
@@ -125,7 +94,7 @@ async function generateStory(characters, backgrounds, length) {
     const response = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
       messages: [
-        { role: 'system', content: 'You are a children\'s story generator. Please make the beginning of the story. Your stories should be short, simple, and easy to understand. Please create only two sentences, based on periods. The tone of speech is that of a fairy tale aimed at children.' },
+        { role: 'system', content: 'Please make the story in Korean. You are a children\'s story generator. Please make the beginning of the story. Your stories should be short, simple, and easy to understand. Please create only two sentences, based on periods. The tone of speech is that of a fairy tale aimed at children.' },
         { role: 'user', content: prompt },
       ],
       max_tokens: 120,
@@ -138,8 +107,76 @@ async function generateStory(characters, backgrounds, length) {
   }
 }
 
+// 이야기 이어서 생성하는 Tango 엔드포인트
+app.post('/generate-story2', async (req, res) => {
+  try {
+    // 파일에서 기존 이야기 읽기
+    const filePath = './stories/generated_story.txt';
+    let previousStoryText = '';
+    
+    // 파일이 존재하면 읽기
+    if (fs.existsSync(filePath)) {
+      previousStoryText = fs.readFileSync(filePath, 'utf8');
+    }
+
+    // 기존 이야기와 이어서 새로운 이야기 생성
+    const generatedStory2 = await generateNextStory(previousStoryText);  // 기존 이야기 텍스트를 넘겨받아서 이어서 이야기 생성
+
+    // 생성된 새로운 이야기 반환
+    res.json({ generatedStory2 });
+  } catch (error) {
+    console.error('Error generating next story:', error);
+    res.status(500).json({ error: '새로운 이야기 생성 중 오류가 발생했습니다.' });
+  }
+});
+
+// 기존 이야기와 이어서 새로운 이야기 생성
+async function generateNextStory(previousStoryText) {
+  try {
+    const prompt = `이야기를 이어서 생성하세요. 기존 이야기: "${previousStoryText}"`;
+
+    // OpenAI GPT-3 API 요청
+    const response = await openai.chat.completions.create({
+      model: 'gpt-3.5-turbo',
+      messages: [
+        { role: 'system', content: 'You are a children\'s story generator. Please continue the following story. Please create only two sentences, based on periods.' },
+        { role: 'user', content: prompt },
+      ],
+      max_tokens: 120,
+    });
+
+    const generatedStory = response.choices[0].message.content;
+
+    // 생성된 새로운 이야기 덧붙이기
+    const filePath = './stories/generated_story.txt';
+    fs.appendFileSync(filePath, `\n\n${generatedStory}\n`); // 새로운 이야기를 파일에 덧붙임
+
+    return generatedStory;
+  } catch (error) {
+    console.error('OpenAI API 호출 중 에러 발생:', error);
+    throw new Error('OpenAI API 호출 실패');
+  }
+}
 
 
+
+// 맞춤법 수정 엔드포인트
+app.post('/correct-text', async (req, res) => {
+  const { text } = req.body; // 클라이언트에서 전달된 텍스트
+
+  if (!text) {
+    return res.status(400).json({ error: 'Text is required.' });
+  }
+
+  try {
+    // 맞춤법 및 문법 수정 요청
+    const correctedText = await correctText(text);
+    res.json({ correctedText });
+  } catch (error) {
+    console.error('Error correcting text:', error);
+    res.status(500).json({ error: '맞춤법 수정 중 오류가 발생했습니다.' });
+  }
+});
 
 // 맞춤법 수정 함수
 async function correctText(text) {
@@ -164,6 +201,7 @@ async function correctText(text) {
     throw new Error('OpenAI API 호출 실패');
   }
 }
+
 
 // 서버 실행
 app.listen(port, () => {

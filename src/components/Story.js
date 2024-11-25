@@ -55,10 +55,7 @@ const Story = ({ selectedCharacters, selectedBackgrounds, selectedLength }) => {
     </h3>
   </div>
 )}
-
 </div>
-
-
       {/* Next Button */}
       <div className="next-button-container">
         <img

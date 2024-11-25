@@ -8,6 +8,7 @@ import SetLength from './components/SetLength';
 import Story from './components/Story'; 
 import Making from './components/Making';
 import Tango from './components/Tango';  
+import Fin from './components/Fin';  
 // src/index.js 또는 src/App.js에 추가
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -55,6 +56,7 @@ function App() {
             }
           />
           <Route path="/tango" element={<Tango />} />
+          <Route path="/fin" element={<Fin />} />
         </Routes>
       </div>
     </Router>
