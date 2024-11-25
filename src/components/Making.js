@@ -5,43 +5,78 @@ import placeholderImage from '../assets/background.png';
 import StartBtn from '../assets/StartBtn.png';
 import StopBtn from '../assets/StopBtn.png';
 import Rerecord from '../assets/Rerecord.png';
+import nextButtonActive from '../assets/nextButton.png'; // 활성화된 Next 버튼 이미지
+import nextButtonInactive from '../assets/inactiveNextButton.png'; // 비활성화된 Next 버튼 이미지
+import finishButtonInactive from '../assets/inactiveFinishButton.png'; // 비활성화된 완료 버튼 이미지
+import finishButtonActive from '../assets/finishButton.png'; // 활성화된 완료 버튼 이미지
+
 import axios from 'axios'; // axios import
 
 const Making = ({ selectedCharacters, selectedBackgrounds, selectedLength }) => {
   const navigate = useNavigate();
   const [isRecording, setIsRecording] = useState(false); // 녹음 상태 관리
-  const [storyText, setStoryText] = useState("녹음 버튼을 눌러 녹음하세요!"); // 텍스트 상태 관리
+  const [storyText, setStoryText] = useState("녹음 버튼을 눌러 다음에 올 문장을 녹음하세요!"); // 텍스트 상태 관리
   const [generatedStory, setGeneratedStory] = useState(""); // 생성된 이야기 상태 관리
+  const [isFinished, setIsFinished] = useState(false); // 완료 버튼 상태 관리
+  const [isNextEnabled, setIsNextEnabled] = useState(false); // Next 버튼 활성화 상태 관리
+
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const recognition = SpeechRecognition ? new SpeechRecognition() : null;
+
+  useEffect(() => {
+    if (recognition) {
+      recognition.lang = 'ko-KR';
+      recognition.interimResults = true;
+
+      recognition.onstart = () => {
+        console.log('음성 인식이 시작되었습니다.');
+      };
+
+      recognition.onresult = (event) => {
+        let finalTranscript = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const transcript = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+            finalTranscript += transcript;
+          }
+        }
+        setStoryText(finalTranscript);
+      };
+
+      recognition.onerror = (event) => {
+        console.error('음성 인식 오류:', event.error);
+      };
+    }
+  }, []);
 
   const handleNextClick = () => {
-    navigate('/tango');
+    navigate('/tango', { state: { storyText, generatedStory } });
   };
 
   const handleAudioButtonClick = () => {
-    setIsRecording(!isRecording); // 버튼 클릭 시 녹음 상태 변경
-  };
-
-  const handleTextChange = (e) => {
-    setStoryText(e.target.value); // 텍스트가 수정될 때마다 상태 업데이트
-  };
-
-  const handleBlur = () => {
-    // 포커스가 벗어날 때 텍스트 저장 (추후 API 연동이나 다른 처리가 필요하면 추가)
+    if (isRecording) {
+      recognition.stop();
+    } else {
+      recognition.start();
+    }
+    setIsRecording(!isRecording);
   };
 
   const handleRerecordClick = () => {
-    setIsRecording(false); // 녹음 상태 초기화 (멈추기)
-    setStoryText("녹음 버튼을 눌러 녹음하세요!"); // 텍스트 초기화
+    setIsRecording(false);
+    setStoryText("녹음 버튼을 눌러 녹음하세요!");
+    recognition.stop();
+    setIsFinished(false);
+    setIsNextEnabled(false);
   };
 
-  // 서버로 이야기 생성 요청 보내기
+  const handleFinishClick = () => {
+    setIsFinished(true); // 완료 상태로 전환
+    setIsNextEnabled(true); // Next 버튼 활성화
+  };
+
   const generateStory = async () => {
-    console.log('서버로 선택값 전송:', {
-      selectedCharacters,
-      selectedBackgrounds,
-      selectedLength,
-    });
-  
+    console.log('서버로 선택값 전송:', { selectedCharacters, selectedBackgrounds, selectedLength });
     try {
       const response = await axios.post('http://localhost:5000/generate-story', {
         selectedCharacters,
@@ -54,58 +89,71 @@ const Making = ({ selectedCharacters, selectedBackgrounds, selectedLength }) => 
     }
   };
 
-  // Automatically generate story when the component mounts
   useEffect(() => {
-    generateStory(); // Call generateStory on page load
-  }, []); // Empty dependency array means this runs once when the component mounts
+    generateStory();
+  }, []);
 
   return (
     <div
       className="main-container"
-      style={{
-        backgroundImage: `url(${placeholderImage})`,
-      }}
+      style={{ backgroundImage: `url(${placeholderImage})` }}
     >
       <div className="main-title">이야기 제작</div>
 
       <div className="story-container">
         <div className="overlay" />
         <div className="story-text">
-          {generatedStory || "잠시만 기다려요..."} 
+          {generatedStory || "잠시만 기다려요..."}
         </div>
         <div className="white-box">
           <textarea
             className="white-box-text"
             value={storyText}
-            onChange={handleTextChange} // 텍스트 상태를 관리
-            onBlur={handleBlur} // 포커스가 벗어날 때 저장
-            placeholder="녹음 버튼을 눌러 녹음하세요!" // placeholder 텍스트
+            onChange={(e) => setStoryText(e.target.value)}
+            placeholder="녹음 버튼을 눌러 다음에 올 문장을 녹음하세요!"
           />
         </div>
 
-        {/* Generate Story Button */}
-        <div className="generate-button-container">
-          <button onClick={generateStory}>이야기 생성</button>
+        {/* Finish Button */}
+        <div className="fin-record-button-container">
+          <img
+            src={isFinished ? finishButtonActive : finishButtonInactive}
+            alt="Finish Button"
+            onClick={!isFinished ? handleFinishClick : undefined}
+          />
         </div>
 
         {/* Rerecord Button */}
         <div className="Rerecord-button-container">
           <img
-            src={Rerecord} // Rerecord 버튼 이미지
+            src={Rerecord}
             alt="Rerecord Button"
-            onClick={handleRerecordClick} // 클릭 시 녹음 초기화 및 재시작
+            onClick={handleRerecordClick}
           />
         </div>
       </div>
 
       {/* Audio Button */}
-      <div className="audio-button-container">
-        <img
-          src={isRecording ? StopBtn : StartBtn} // 녹음 상태에 따라 버튼 이미지 변경
-          alt={isRecording ? 'Stop Button' : 'Start Button'}
-          onClick={handleAudioButtonClick} // 클릭 시 녹음 시작/중지
-        />
-      </div>
+      {!isFinished && (
+        <div className="audio-button-container">
+          <img
+            src={isRecording ? StopBtn : StartBtn}
+            alt={isRecording ? 'Stop Button' : 'Start Button'}
+            onClick={handleAudioButtonClick}
+          />
+        </div>
+      )}
+
+      {/* Next Button */}
+      {isFinished && (
+        <div className="nextzz-button-container">
+          <img
+            src={isNextEnabled ? nextButtonActive : nextButtonInactive}
+            alt="Next Button"
+            onClick={isNextEnabled ? handleNextClick : undefined}
+          />
+        </div>
+      )}
     </div>
   );
 };

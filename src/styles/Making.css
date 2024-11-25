@@ -79,10 +79,10 @@
 }
 
 /* Button position */
-.next-button-container {
+.nextzz-button-container {
   margin-top: 40px;
   position: relative;
-  top: 100px;
+  top: -10px;
 }
 
 /* 반투명 검은색 오버레이 */
@@ -155,8 +155,8 @@
 /* Rerecord 버튼 위치 */
 .Rerecord-button-container {
   position: absolute;  /* 절대 위치 */
-  right: 10px;
-  top: 550px;
+  right: 0px;
+  top: 560px;
   transform: translateX(-50%); /* 가운데 정렬 */
 }
 
@@ -174,3 +174,30 @@
   width: 100%;          /* 버튼이 컨테이너의 전체 너비 차지 */
   height: 100%;         /* 버튼이 컨테이너의 전체 높이 차지 */
 }
+
+.story-text {
+  font-size: 30px; 
+}
+
+/* Finish Button 위치 및 스타일 */
+.fin-record-button-container {
+  position: absolute;  /* 절대 위치 */
+  top: 570px;          /* Rerecord 버튼과 동일한 세로 위치 */
+  right: 50px;        /* Rerecord 버튼 오른쪽에 100px 간격으로 배치 */
+  transform: translateX(-50%);
+  z-index: 2;          /* 버튼이 다른 요소 위에 나타나도록 설정 */
+}
+
+.fin-record-button-container img {
+  width: 70px;         /* Finish 버튼 크기 */
+  height: 70px;        /* Finish 버튼 크기 */
+  cursor: pointer;     /* 클릭 가능하도록 커서 변경 */
+  border-radius: 50%;  /* 둥근 버튼 */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* 약간의 그림자 효과 */
+  transition: transform 0.2s ease-in-out; /* 클릭 시 애니메이션 추가 */
+}
+
+.fin-record-button-container img:hover {
+  transform: scale(1.1); /* 마우스 오버 시 확대 효과 */
+}
+
