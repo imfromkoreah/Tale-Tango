@@ -59,11 +59,16 @@ const Tango = () => {
 
             <div className="story-container">
                 <div className="overlay" />
-
                 {/* 전달된 이야기 텍스트 표시 */}
                 <div className="story-text">
                     <h2>Story:</h2>
                     <p>{displayedText}</p>
+                </div>
+                <div className="white-box">
+                    <textarea
+                        className="white-box-text"
+                        placeholder="AI가 이야기를 이어서 생성 중이에요.."
+                    />
                 </div>
 
             </div>

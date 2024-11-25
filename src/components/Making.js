@@ -102,6 +102,7 @@ const Making = ({ selectedCharacters, selectedBackgrounds, selectedLength }) => 
 
       <div className="story-container">
         <div className="overlay" />
+        {/* 전달된 이야기 텍스트 표시 */}
         <div className="story-text">
           {generatedStory || "잠시만 기다려요..."}
         </div>

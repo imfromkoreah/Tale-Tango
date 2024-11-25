@@ -25,16 +25,17 @@ app.get('/', (req, res) => {
 
 // AI 이야기 생성 엔드포인트
 app.post('/generate-story', async (req, res) => {
-  const { selectedCharacters, selectedBackgrounds, selectedLength } = req.body;
+  const { selectedCharacters, selectedBackgrounds, selectedLength, storyText } = req.body;
 
   // 선택된 데이터 로깅 (디버깅용)
   console.log('선택된 등장인물:', selectedCharacters);
   console.log('선택된 배경:', selectedBackgrounds);
   console.log('선택된 이야기 길이:', selectedLength);
+  console.log('이전 이야기:', storyText);  // 이어서 생성할 이전 이야기 텍스트
 
   try {
-    // 이야기 생성 요청
-    const story = await generateStory(selectedCharacters, selectedBackgrounds, selectedLength);
+    // 이전 이야기와 새로 선택된 옵션을 바탕으로 새로운 이야기 생성
+    const story = await generateStory(selectedCharacters, selectedBackgrounds, selectedLength, storyText);
     res.json({ story });
   } catch (error) {
     console.error('Error generating story:', error);
@@ -60,11 +61,14 @@ app.post('/correct-text', async (req, res) => {
   }
 });
 
-//이야기 생성 함수
-async function generateStory(characters, backgrounds, length) {
+// 이야기 생성 함수
+async function generateStory(characters, backgrounds, length, storyText) {
   try {
-    // 등장인물과 배경에 대한 간단한 설정
+    // 이전 이야기와 등장인물, 배경에 대한 간단한 설정
     let prompt = `이야기 길이: ${length}. 등장인물: ${characters.map(c => c.name).join('와/과 ')}. 배경: ${backgrounds[0].name}. \n`;
+
+    // 이전 이야기 내용도 포함하여 추가적인 이야기를 이어서 생성
+    prompt += `이전 이야기: ${storyText} \n`;
 
     // 동화 스타일로 간단하게 이야기 생성
     if (length === 'len1') {
@@ -82,10 +86,10 @@ async function generateStory(characters, backgrounds, length) {
     const response = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
       messages: [
-        { role: 'system', content: 'You are a children\'s story generator. Your stories should be short, simple, and easy to understand.' },
+        { role: 'system', content: 'You are a children\'s story generator. Your stories should be short, simple, and easy to understand. Please create only two sentences, based on periods.' },
         { role: 'user', content: prompt },
       ],
-      max_tokens: 100,
+      max_tokens: 100, // 이어서 생성할 이야기의 길이에 따라 토큰 수 조정
     });
 
     return response.choices[0].message.content;
