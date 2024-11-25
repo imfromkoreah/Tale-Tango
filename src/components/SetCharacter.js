@@ -56,14 +56,19 @@ const SetCharacter = ({ setSelectedCharacters }) => {
     if (selectedCards.length < 2) {
       alert('최소 2개의 카드를 선택해야 합니다.');
     } else {
+      // 선택된 캐릭터들 필터링
       const selectedCharacters = characters.filter((character) =>
         selectedCardIds.includes(character.id)
       );
-
-      setSelectedCharacters(selectedCharacters); // 부모로 선택된 캐릭터 전달
+  
+      // 선택된 캐릭터들을 콘솔에 출력
+      console.log('선택된 캐릭터들:', selectedCharacters);
+  
+      setSelectedCharacters(selectedCharacters); // 부모 컴포넌트로 선택된 캐릭터 전달
       navigate('/background'); // SetBackground 페이지로 이동
     }
   };
+  
 
   return (
     <div

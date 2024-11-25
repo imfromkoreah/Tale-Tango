@@ -43,7 +43,16 @@ function App() {
               />
             }
           />
-          <Route path="/making" element={<Making />} />
+          <Route
+            path="/making"
+            element={
+              <Making
+                selectedCharacters={selectedCharacters}
+                selectedBackgrounds={selectedBackgrounds}
+                selectedLength={selectedLength}
+              />
+            }
+          />
         </Routes>
       </div>
     </Router>

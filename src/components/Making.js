@@ -5,11 +5,13 @@ import placeholderImage from '../assets/background.png';
 import StartBtn from '../assets/StartBtn.png';
 import StopBtn from '../assets/StopBtn.png';
 import Rerecord from '../assets/Rerecord.png';
+import axios from 'axios'; // axios import
 
-const Story = ({ selectedCharacters, selectedBackgrounds, selectedLength }) => {
+const Making = ({ selectedCharacters, selectedBackgrounds, selectedLength }) => {
   const navigate = useNavigate();
   const [isRecording, setIsRecording] = useState(false); // 녹음 상태 관리
   const [storyText, setStoryText] = useState("녹음 버튼을 눌러 녹음하세요!"); // 텍스트 상태 관리
+  const [generatedStory, setGeneratedStory] = useState(""); // 생성된 이야기 상태 관리
 
   const handleNextClick = () => {
     navigate('/tango');
@@ -32,6 +34,28 @@ const Story = ({ selectedCharacters, selectedBackgrounds, selectedLength }) => {
     setStoryText("녹음 버튼을 눌러 녹음하세요!"); // 텍스트 초기화
   };
 
+  // 서버로 이야기 생성 요청 보내기
+  const generateStory = async () => {
+    console.log('서버로 선택값 전송:', {
+      selectedCharacters,
+      selectedBackgrounds,
+      selectedLength,
+    });
+  
+    try {
+      const response = await axios.post('http://localhost:5000/generate-story', {
+        selectedCharacters,
+        selectedBackgrounds,
+        selectedLength,
+      });
+      setGeneratedStory(response.data.story);
+    } catch (error) {
+      console.error('Error generating story:', error);
+    }
+  };
+  
+  
+
   return (
     <div
       className="main-container"
@@ -44,7 +68,7 @@ const Story = ({ selectedCharacters, selectedBackgrounds, selectedLength }) => {
       <div className="story-container">
         <div className="overlay" />
         <div className="story-text">
-          콩쥐는 수영을 좋아하는 아이였어요. 하루는, 콩쥐는 수영을 하기 위해 바닷가에 나갔어요.
+          {generatedStory || "콩쥐는 수영을 좋아하는 아이였어요. 하루는, 콩쥐는 수영을 하기 위해 바닷가에 나갔어요."}
         </div>
         <div className="white-box">
           <textarea
@@ -55,7 +79,12 @@ const Story = ({ selectedCharacters, selectedBackgrounds, selectedLength }) => {
             placeholder="녹음 버튼을 눌러 녹음하세요!" // placeholder 텍스트
           />
         </div>
-        
+
+        {/* Generate Story Button */}
+        <div className="generate-button-container">
+          <button onClick={generateStory}>이야기 생성</button>
+        </div>
+
         {/* Rerecord Button */}
         <div className="Rerecord-button-container">
           <img
@@ -74,12 +103,8 @@ const Story = ({ selectedCharacters, selectedBackgrounds, selectedLength }) => {
           onClick={handleAudioButtonClick} // 클릭 시 녹음 시작/중지
         />
       </div>
-
-      {/* <div className="next-button-container">
-        <button onClick={handleNextClick}>다음</button>
-      </div> */}
     </div>
   );
 };
 
-export default Story;
+export default Making;

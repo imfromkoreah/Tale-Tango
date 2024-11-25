@@ -53,15 +53,19 @@ const SetBackground = ({ setSelectedBackgrounds }) => {
     if (selectedCards.length === 0) {
       alert('배경을 최소 1개 선택해야 합니다.');
     } else {
-      // 선택된 배경 정보 출력
+      // 선택된 배경 정보 필터링
       const selectedBackground = backgrounds.filter(background =>
         selectedCardIds.includes(background.id)
       );
-
-      setSelectedBackgrounds(selectedBackground); // 부모로 선택된 배경 전달
+  
+      // 선택된 배경을 콘솔에 출력
+      console.log('선택된 배경:', selectedBackground);
+  
+      setSelectedBackgrounds(selectedBackground); // 부모 컴포넌트로 선택된 배경 전달
       navigate('/length'); // SetLength 페이지로 이동
     }
   };
+  
 
   return (
     <div
