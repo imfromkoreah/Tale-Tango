@@ -61,7 +61,6 @@ const Tango = () => {
                 <div className="overlay" />
                 {/* 전달된 이야기 텍스트 표시 */}
                 <div className="story-text">
-                    <h2>Story:</h2>
                     <p>{displayedText}</p>
                 </div>
                 <div className="white-box">

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Making.css';
 import placeholderImage from '../assets/background.png';
@@ -21,8 +21,13 @@ const Making = ({ selectedCharacters, selectedBackgrounds, selectedLength }) => 
   const [isNextEnabled, setIsNextEnabled] = useState(false); // Next 버튼 활성화 상태 관리
 
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  const recognition = SpeechRecognition ? new SpeechRecognition() : null;
 
+  // recognition 객체를 useMemo로 감싸서 메모이제이션
+  const recognition = useMemo(() => {
+    return SpeechRecognition ? new SpeechRecognition() : null;
+  }, [SpeechRecognition]);
+
+  // 음성 인식 초기화와 오류 핸들링을 위해 useEffect 수정
   useEffect(() => {
     if (recognition) {
       recognition.lang = 'ko-KR';
@@ -47,7 +52,33 @@ const Making = ({ selectedCharacters, selectedBackgrounds, selectedLength }) => 
         console.error('음성 인식 오류:', event.error);
       };
     }
-  }, []);
+
+    // cleanup: 음성 인식 종료
+    return () => {
+      if (recognition) {
+        recognition.stop();
+      }
+    };
+  }, [recognition]); // recognition 객체를 의존성 배열에 추가
+
+  // 생성된 이야기를 서버에서 받아오는 함수 (useCallback을 사용해 재사용 가능하도록 변경)
+  const generateStory = useCallback(async () => {
+    console.log('서버로 선택값 전송:', { selectedCharacters, selectedBackgrounds, selectedLength });
+    try {
+      const response = await axios.post('http://localhost:5000/generate-story', {
+        selectedCharacters,
+        selectedBackgrounds,
+        selectedLength,
+      });
+      setGeneratedStory(response.data.story);
+    } catch (error) {
+      console.error('Error generating story:', error);
+    }
+  }, [selectedCharacters, selectedBackgrounds, selectedLength]);
+
+  useEffect(() => {
+    generateStory(); // 최초 1회 호출
+  }, [generateStory]); // generateStory가 변경될 때마다 호출
 
   const handleNextClick = () => {
     navigate('/tango', { state: { storyText, generatedStory } });
@@ -75,24 +106,6 @@ const Making = ({ selectedCharacters, selectedBackgrounds, selectedLength }) => 
     setIsNextEnabled(true); // Next 버튼 활성화
   };
 
-  const generateStory = async () => {
-    console.log('서버로 선택값 전송:', { selectedCharacters, selectedBackgrounds, selectedLength });
-    try {
-      const response = await axios.post('http://localhost:5000/generate-story', {
-        selectedCharacters,
-        selectedBackgrounds,
-        selectedLength,
-      });
-      setGeneratedStory(response.data.story);
-    } catch (error) {
-      console.error('Error generating story:', error);
-    }
-  };
-
-  useEffect(() => {
-    generateStory();
-  }, []);
-
   return (
     <div
       className="main-container"
@@ -102,7 +115,6 @@ const Making = ({ selectedCharacters, selectedBackgrounds, selectedLength }) => 
 
       <div className="story-container">
         <div className="overlay" />
-        {/* 전달된 이야기 텍스트 표시 */}
         <div className="story-text">
           {generatedStory || "잠시만 기다려요..."}
         </div>

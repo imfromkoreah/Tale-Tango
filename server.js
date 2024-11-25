@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const fs = require('fs'); // 파일 저장을 위한 fs 모듈
 const { OpenAI } = require('openai');
 require('dotenv').config(); // .env 파일에서 API 키를 로드
 
@@ -25,17 +26,25 @@ app.get('/', (req, res) => {
 
 // AI 이야기 생성 엔드포인트
 app.post('/generate-story', async (req, res) => {
-  const { selectedCharacters, selectedBackgrounds, selectedLength, storyText } = req.body;
+  const { selectedCharacters, selectedBackgrounds, selectedLength } = req.body;
 
   // 선택된 데이터 로깅 (디버깅용)
   console.log('선택된 등장인물:', selectedCharacters);
   console.log('선택된 배경:', selectedBackgrounds);
   console.log('선택된 이야기 길이:', selectedLength);
-  console.log('이전 이야기:', storyText);  // 이어서 생성할 이전 이야기 텍스트
 
   try {
-    // 이전 이야기와 새로 선택된 옵션을 바탕으로 새로운 이야기 생성
-    const story = await generateStory(selectedCharacters, selectedBackgrounds, selectedLength, storyText);
+    // 이야기 생성 요청
+    const story = await generateStory(selectedCharacters, selectedBackgrounds, selectedLength);
+
+    // 터미널에 출력
+    console.log('생성된 이야기:', story);
+
+    // 파일에 저장
+    const filePath = `./stories/story_${Date.now()}.txt`; // 파일명에 타임스탬프 추가
+    fs.writeFileSync(filePath, story, 'utf8');
+    console.log(`이야기가 ${filePath}에 저장되었습니다.`);
+
     res.json({ story });
   } catch (error) {
     console.error('Error generating story:', error);
@@ -45,7 +54,7 @@ app.post('/generate-story', async (req, res) => {
 
 // 맞춤법 수정 엔드포인트
 app.post('/correct-text', async (req, res) => {
-  const { text } = req.body;  // 클라이언트에서 전달된 텍스트
+  const { text } = req.body; // 클라이언트에서 전달된 텍스트
 
   if (!text) {
     return res.status(400).json({ error: 'Text is required.' });
@@ -62,13 +71,10 @@ app.post('/correct-text', async (req, res) => {
 });
 
 // 이야기 생성 함수
-async function generateStory(characters, backgrounds, length, storyText) {
+async function generateStory(characters, backgrounds, length) {
   try {
-    // 이전 이야기와 등장인물, 배경에 대한 간단한 설정
+    // 등장인물과 배경에 대한 간단한 설정
     let prompt = `이야기 길이: ${length}. 등장인물: ${characters.map(c => c.name).join('와/과 ')}. 배경: ${backgrounds[0].name}. \n`;
-
-    // 이전 이야기 내용도 포함하여 추가적인 이야기를 이어서 생성
-    prompt += `이전 이야기: ${storyText} \n`;
 
     // 동화 스타일로 간단하게 이야기 생성
     if (length === 'len1') {
@@ -86,10 +92,10 @@ async function generateStory(characters, backgrounds, length, storyText) {
     const response = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
       messages: [
-        { role: 'system', content: 'You are a children\'s story generator. Your stories should be short, simple, and easy to understand. Please create only two sentences, based on periods.' },
+        { role: 'system', content: 'You are a children\'s story generator. Your stories should be short, simple, and easy to understand. Please create only two sentences, based on periods. The tone of speech is that of a fairy tale aimed at children.' },
         { role: 'user', content: prompt },
       ],
-      max_tokens: 100, // 이어서 생성할 이야기의 길이에 따라 토큰 수 조정
+      max_tokens: 120,
     });
 
     return response.choices[0].message.content;
