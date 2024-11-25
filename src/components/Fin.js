@@ -33,8 +33,8 @@ const Fin = () => {
       alert('이야기 제목과 그림을 선택해주세요!');
       return;
     }
-    // selectedImage를 navigate를 통해 MainPage로 전달
-    navigate('/', { state: { selectedImage } });  // state로 selectedImage 전달
+    // selectedImage와 inputText를 navigate를 통해 Restart로 전달
+    navigate('/restart', { state: { selectedImage, storyText, inputText } });  // state로 selectedImage와 inputText 전달
   };
 
   // 컴포넌트가 마운트될 때 서버에서 이야기 텍스트 가져오기
