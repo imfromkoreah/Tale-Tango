@@ -79,9 +79,11 @@ const Restart = () => {
               style={{
                 width: '100%',
                 height: '100%',
+                fontSize: '20px',
                 backgroundColor: 'rgba(0, 0, 0, 0.8)',
                 color: 'white',
                 padding: '20px',
+                whiteSpace: 'pre-wrap',  // 줄바꿈 처리
                 borderRadius: '15px',
                 position: 'absolute',
                 backfaceVisibility: 'hidden', // 뒷면이 보이지 않도록 설정

@@ -153,7 +153,7 @@ const Fin = () => {
                 padding: '20px',
                 color: 'white',
                 overflow: 'auto',
-                fontSize: '20px',
+                fontSize: '19px',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'flex-start',
