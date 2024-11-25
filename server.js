@@ -28,29 +28,62 @@ app.get('/', (req, res) => {
 app.post('/generate-story', async (req, res) => {
   const { selectedCharacters, selectedBackgrounds, selectedLength } = req.body;
 
-  // 선택된 데이터 로깅 (디버깅용)
-  console.log('선택된 등장인물:', selectedCharacters);
-  console.log('선택된 배경:', selectedBackgrounds);
-  console.log('선택된 이야기 길이:', selectedLength);
-
   try {
     // 이야기 생성 요청
     const story = await generateStory(selectedCharacters, selectedBackgrounds, selectedLength);
 
-    // 터미널에 출력
-    console.log('생성된 이야기:', story);
+    // 파일 경로 (여기서는 고정된 파일 이름 사용)
+    const filePath = './stories/generated_story.txt';  // 파일명 고정
 
     // 파일에 저장
-    const filePath = `./stories/story_${Date.now()}.txt`; // 파일명에 타임스탬프 추가
     fs.writeFileSync(filePath, story, 'utf8');
     console.log(`이야기가 ${filePath}에 저장되었습니다.`);
 
-    res.json({ story });
+    // 생성된 이야기와 파일 경로를 클라이언트로 전달
+    res.json({ story, filePath });
   } catch (error) {
     console.error('Error generating story:', error);
     res.status(500).json({ error: '이야기 생성 중 오류가 발생했습니다.' });
   }
 });
+
+// 스토리 저장 엔드포인트
+app.post('/save-story', (req, res) => {
+  const { storyText, filePath } = req.body;
+
+  if (!storyText || !filePath) {
+    return res.status(400).json({ error: '스토리와 파일 경로가 필요합니다.' });
+  }
+
+  try {
+    // 기존 이야기 파일에 덧붙이기
+    fs.appendFileSync(filePath, `\n\n사용자 추가 내용:\n${storyText}\n`);
+    console.log(`사용자 입력이 ${filePath}에 덧붙여졌습니다.`);
+
+    res.json({ message: '스토리가 덧붙여졌습니다.', filePath });
+  } catch (error) {
+    console.error('파일 덧붙이기 중 오류 발생:', error);
+    res.status(500).json({ error: '스토리 덧붙이기 중 오류가 발생했습니다.' });
+  }
+});
+
+// 이야기 이어서 생성하는 Tango 엔드포인트
+app.post('/generate-story2', async (req, res) => {
+  const { previousStoryText } = req.body;
+
+  try {
+    // 기존 이야기와 이어서 새로운 이야기 생성
+    const generatedStory2 = await generateNextStory(previousStoryText);  // 기존 이야기 텍스트를 넘겨받아서 이어서 이야기 생성
+
+    // 생성된 새로운 이야기 반환
+    res.json({ generatedStory2 });
+  } catch (error) {
+    console.error('Error generating next story:', error);
+    res.status(500).json({ error: '새로운 이야기 생성 중 오류가 발생했습니다.' });
+  }
+});
+
+
 
 // 맞춤법 수정 엔드포인트
 app.post('/correct-text', async (req, res) => {
@@ -92,7 +125,7 @@ async function generateStory(characters, backgrounds, length) {
     const response = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
       messages: [
-        { role: 'system', content: 'You are a children\'s story generator. Your stories should be short, simple, and easy to understand. Please create only two sentences, based on periods. The tone of speech is that of a fairy tale aimed at children.' },
+        { role: 'system', content: 'You are a children\'s story generator. Please make the beginning of the story. Your stories should be short, simple, and easy to understand. Please create only two sentences, based on periods. The tone of speech is that of a fairy tale aimed at children.' },
         { role: 'user', content: prompt },
       ],
       max_tokens: 120,
@@ -104,6 +137,9 @@ async function generateStory(characters, backgrounds, length) {
     throw new Error('OpenAI API 호출 실패');
   }
 }
+
+
+
 
 // 맞춤법 수정 함수
 async function correctText(text) {

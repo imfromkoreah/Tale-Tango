@@ -19,6 +19,7 @@ const Making = ({ selectedCharacters, selectedBackgrounds, selectedLength }) => 
   const [generatedStory, setGeneratedStory] = useState(""); // 생성된 이야기 상태 관리
   const [isFinished, setIsFinished] = useState(false); // 완료 버튼 상태 관리
   const [isNextEnabled, setIsNextEnabled] = useState(false); // Next 버튼 활성화 상태 관리
+  const [storyFilePath, setStoryFilePath] = useState(""); // 파일 경로 상태 관리
 
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
@@ -59,7 +60,7 @@ const Making = ({ selectedCharacters, selectedBackgrounds, selectedLength }) => 
         recognition.stop();
       }
     };
-  }, [recognition]); // recognition 객체를 의존성 배열에 추가
+  }, [recognition]);
 
   // 생성된 이야기를 서버에서 받아오는 함수 (useCallback을 사용해 재사용 가능하도록 변경)
   const generateStory = useCallback(async () => {
@@ -70,7 +71,10 @@ const Making = ({ selectedCharacters, selectedBackgrounds, selectedLength }) => 
         selectedBackgrounds,
         selectedLength,
       });
+
+      // 생성된 이야기와 파일 경로 받기
       setGeneratedStory(response.data.story);
+      setStoryFilePath(response.data.filePath);  // 파일 경로 저장
     } catch (error) {
       console.error('Error generating story:', error);
     }
@@ -104,6 +108,20 @@ const Making = ({ selectedCharacters, selectedBackgrounds, selectedLength }) => 
   const handleFinishClick = () => {
     setIsFinished(true); // 완료 상태로 전환
     setIsNextEnabled(true); // Next 버튼 활성화
+
+    // 사용자가 입력한 내용을 서버로 전송하여 파일에 덧붙이기
+    if (storyText && storyFilePath) {
+      axios.post('http://localhost:5000/save-story', {
+        storyText,
+        filePath: storyFilePath,
+      })
+      .then(response => {
+        console.log('사용자 입력이 덧붙여졌습니다:', response.data.filePath);
+      })
+      .catch(error => {
+        console.error('스토리 덧붙이기 중 오류 발생:', error);
+      });
+    }
   };
 
   return (

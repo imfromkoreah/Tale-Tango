@@ -16,6 +16,7 @@ const Tango = () => {
     const { storyText = "No story text provided" } = location.state || {}; // 기본값 설정
 
     const [correctedText, setCorrectedText] = useState(""); // 수정된 텍스트를 저장할 상태
+    const [generatedStory2, setGeneratedStory2] = useState(""); // 두 번째 생성된 이야기를 저장할 상태
 
     useEffect(() => {
         // storyText가 있을 때 서버에 맞춤법 수정 요청 보내기
@@ -41,6 +42,27 @@ const Tango = () => {
     // 수정된 텍스트가 있다면 그걸 storyText로 덮어쓰기
     const displayedText = correctedText || storyText;
 
+    // 새로운 이야기 생성
+    useEffect(() => {
+        if (correctedText || storyText) {
+            fetch('http://localhost:5000/generate-story2', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ previousStoryText: correctedText || storyText }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                setGeneratedStory2(data.generatedStory2); // 두 번째 생성된 이야기를 상태에 저장
+            })
+            .catch(error => {
+                console.error("Error generating next story:", error);
+                setGeneratedStory2("AI가 이어서 이야기를 생성 중이에요...");
+            });
+        }
+    }, [correctedText, storyText]); // correctedText 또는 storyText가 변경될 때마다 새로운 이야기 생성
+
     const handleClick = () => {
         navigate('/Tango2');  // 버튼 클릭 시 /Tango2 경로로 이동
     };
@@ -64,12 +86,9 @@ const Tango = () => {
                     <p>{displayedText}</p>
                 </div>
                 <div className="white-box">
-                    <textarea
-                        className="white-box-text"
-                        placeholder="AI가 이야기를 이어서 생성 중이에요.."
-                    />
+                    {/* 이어서 생성된 이야기 표시 */}
+                    {generatedStory2 || "AI가 이어서 이야기를 생성 중이에요..."}
                 </div>
-
             </div>
         </div>
     );
