@@ -7,16 +7,16 @@ import nextButtonActive from '../assets/nextButton.png'; // 활성화된 버튼 
 
 // 배경 데이터
 const backgrounds = [
-  { id: 1, name: '숲 (1)', image: require('../assets/background/forest1.png') },
-  { id: 2, name: '숲 (2)', image: require('../assets/background/forest2.png') },
-  { id: 3, name: '궁전 (1)', image: require('../assets/background/palace1.png') },
-  { id: 4, name: '궁전 (2)', image: require('../assets/background/palace2.png') },
-  { id: 5, name: '바닷속 (1)', image: require('../assets/background/under-the-sea1.png') },
-  { id: 6, name: '바닷속 (2)', image: require('../assets/background/under-the-sea2.png') },
-  { id: 7, name: '바닷속 (3)', image: require('../assets/background/under-the-sea3.png') },
-  { id: 8, name: '마을 (1)', image: require('../assets/background/village1.png') },
-  { id: 9, name: '마을 (2)', image: require('../assets/background/village2.png') },
-  { id: 10, name: '마을 (3)', image: require('../assets/background/village3.png') },
+  { id: 1, name: '눈이 소복한 숲속', image: require('../assets/background/forest1.png') },
+  { id: 2, name: '신비로운 숲속', image: require('../assets/background/forest2.png') },
+  { id: 3, name: '신비로운 궁전', image: require('../assets/background/palace1.png') },
+  { id: 4, name: '알록달록한 궁전', image: require('../assets/background/palace2.png') },
+  { id: 5, name: '푸른 바다의 전설', image: require('../assets/background/under-the-sea1.png') },
+  { id: 6, name: '니모가 헤엄치는 바다', image: require('../assets/background/under-the-sea2.png') },
+  { id: 7, name: '상상 속 바다', image: require('../assets/background/under-the-sea3.png') },
+  { id: 8, name: '눈이 내리는 마을', image: require('../assets/background/village1.png') },
+  { id: 9, name: '이상한 골목길', image: require('../assets/background/village2.png') },
+  { id: 10, name: '보물이 숨겨진 해변', image: require('../assets/background/village3.png') },
 ];
 
 // 랜덤으로 10개의 배경을 뽑는 함수

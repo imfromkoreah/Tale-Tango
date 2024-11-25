@@ -1,31 +1,33 @@
 /* Main container */
 .main-container {
-  width: 1600px;      /* 너비 */
-  height: 900px;      /* 높이 */
+  width: 1600px;        /* 고정된 너비 */
+  height: 900px;        /* 고정된 높이 */
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);  /* 여전히 가운데 정렬 유지 */
-  background-image: url('https://via.placeholder.com/1600x900');
-  background-size: cover;
-  background-position: center;
-  border-radius: 20px; /* 모서리 둥글게 */
+  transform: translate(-50%, -50%);
+  background-image: url('https://via.placeholder.com/1600x900'); /* 배경 이미지 */
+  background-size: cover; /* 배경 이미지가 화면을 덮도록 */
+  background-position: center; /* 배경 이미지가 가운데로 */
+  border-radius: 20px;  /* 모서리 둥글게 */
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: flex-start; /* 세로로 위에 맞추기 */
-  padding: 20px;
+  justify-content: center; /* 세로 중앙 정렬 */
+  align-items: center;     /* 가로 중앙 정렬 */
 }
 
-/* 선택 항목들을 한 줄에 가로로 정렬하기 위한 flexbox */
+/* 선택 항목들을 중앙에 가로로 정렬 */
 .selected-items-container {
   display: flex;
-  justify-content: flex-start; /* 왼쪽부터 정렬 */
-  gap: 20px; /* 카드 간격 */
-  width: 100%;
-  overflow-x: auto; /* 가로 스크롤이 가능하도록 */
-  margin-bottom: 20px;
+  flex-direction: row; /* 가로 방향으로 정렬 */
+  justify-content: center; /* 가로로 중앙 정렬 */
+  align-items: center; /* 세로로 중앙 정렬 */
+  gap: 30px; /* 카드 사이 간격 */
+  width: 100%; /* 메인 컨테이너에 맞게 확장 */
+  margin-top: 20px; /* 메인 컨테이너 상단과의 간격 */
+  overflow-x: auto; /* 내용이 많아지면 가로 스크롤 가능 */
+  flex-wrap: wrap; /* 화면이 좁으면 줄바꿈 */
 }
 
 /* 선택된 등장인물 리스트 */
@@ -36,7 +38,7 @@
 }
 
 .character-card {
-  width: 150px; /* 카드 너비 */
+  width: 200px; /* 카드 너비 */
   text-align: center;
   background-color: rgba(255, 255, 255, 0.7);
   border-radius: 10px;
@@ -49,6 +51,13 @@
   border-radius: 10px;
 }
 
+.character-card h3 {
+  color: black; /* 흰색 텍스트 */
+  font-family: 'MyCustomFont', sans-serif; /* 원하는 폰트 */
+  font-size: 18px; /* 폰트 크기 */
+  
+}
+
 /* 선택된 배경 리스트 */
 .selected-background {
   display: flex;
@@ -57,7 +66,7 @@
 }
 
 .background-card {
-  width: 150px; /* 카드 너비 */
+  width: 180px; /* 카드 너비 */
   text-align: center;
   background-color: rgba(255, 255, 255, 0.7);
   border-radius: 10px;
@@ -69,17 +78,47 @@
   border-radius: 10px;
 }
 
-/* 선택된 이야기 길이 */
-.selected-length {
-  display: flex;
-  gap: 20px; /* 카드 간격 */
-  flex-shrink: 0; /* 줄어들지 않도록 */
+.background-card h3 {
+  color: black; /* 흰색 텍스트 */
+  font-family: 'MyCustomFont', sans-serif; /* 원하는 폰트 */
+  font-size: 18px; /* 폰트 크기 */
+  
 }
 
-.selected-length p {
-  font-size: 20px;
-  color: #fff; /* 텍스트 색상 */
+/* 선택된 이야기 길이 카드 */
+.selected-length-card {
+  width: 150px; /* 카드 너비 */
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.7); /* 반투명 배경 */
+  border-radius: 10px; /* 둥근 모서리 */
+  padding: 10px;
+  box-sizing: border-box; /* 패딩 포함 크기 계산 */
+  display: flex;
+  flex-direction: column; /* 이미지와 텍스트를 세로로 정렬 */
+  align-items: center; /* 가로 중앙 정렬 */
+  gap: 10px; /* 이미지와 텍스트 간격 */
 }
+
+.selected-length-card img {
+  width: 100%; /* 이미지가 카드 너비를 채움 */
+  border-radius: 10px;
+}
+
+.selected-length-card h3 {
+  color: white !important; /* 흰색 텍스트, 우선순위 높임 */
+  font-family: 'MyCustomFont', sans-serif; /* 원하는 폰트 */
+  font-size: 18px; /* 폰트 크기 */
+  font-weight: bold; /* 폰트 두께 */
+}
+
+/* @font-face로 폰트 정의 */
+@font-face {
+  font-family: 'MyCustomFont';
+  src: url('../assets/fonts/Jalnan.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 
 /* 비활성화된 버튼 스타일 (inactive 상태) */
 .inactiveNextButton {
