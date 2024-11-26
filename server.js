@@ -122,13 +122,14 @@ app.post('/generate-story2', async (req, res) => {
     // 기존 이야기와 이어서 새로운 이야기 생성
     const generatedStory2 = await generateNextStory(previousStoryText);  // 기존 이야기 텍스트를 넘겨받아서 이어서 이야기 생성
 
-    // 생성된 새로운 이야기 반환
+    // 생성된 새로운 이야기만을 반환
     res.json({ generatedStory2 });
   } catch (error) {
     console.error('Error generating next story:', error);
     res.status(500).json({ error: '새로운 이야기 생성 중 오류가 발생했습니다.' });
   }
 });
+
 
 // 기존 이야기와 이어서 새로운 이야기 생성
 async function generateNextStory(previousStoryText) {

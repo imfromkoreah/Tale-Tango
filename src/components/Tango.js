@@ -38,24 +38,25 @@ const Tango = () => {
     const displayedText = correctedText || storyText;
   
     // 이어서 이야기 생성하기
-    useEffect(() => {
-      if (storyText) {
-        fetch('http://localhost:5000/generate-story2', { // 서버의 generate-story2 엔드포인트 호출
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ previousStoryText: storyText }), // 기존 이야기를 서버로 전달
-        })
-        .then(response => response.json())
-        .then(data => {
-          setGeneratedStory2(data.generatedStory2); // 이어서 생성된 이야기 저장
-        })
-        .catch(error => {
-          console.error("Error generating next story:", error);
-        });
-      }
-    }, [storyText]); // storyText가 변경될 때마다 이어서 이야기 생성
+useEffect(() => {
+  if (storyText) {
+    fetch('http://localhost:5000/generate-story2', { // 서버의 generate-story2 엔드포인트 호출
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ previousStoryText: storyText }), // 기존 이야기를 서버로 전달
+    })
+    .then(response => response.json())
+    .then(data => {
+      setGeneratedStory2(data.generatedStory2); // 이어서 생성된 이야기 저장
+    })
+    .catch(error => {
+      console.error("Error generating next story:", error);
+    });
+  }
+}, [storyText]); // storyText가 변경될 때마다 이어서 이야기 생성
+
   
     const handleClick = () => {
       navigate('/fin');  // 버튼 클릭 시 fin 경로로 이동
