@@ -1,0 +1,91 @@
+/* Main container */
+.main-container {
+  width: 1600px;        /* 고정된 너비 */
+  height: 900px;        /* 고정된 높이 */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-image: url('https://via.placeholder.com/1600x900'); /* 배경 이미지 */
+  background-size: cover; /* 배경 이미지가 화면을 덮도록 */
+  background-position: center; /* 배경 이미지가 가운데로 */
+  border-radius: 20px;  /* 모서리 둥글게 */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* 세로 중앙 정렬 */
+  align-items: center;     /* 가로 중앙 정렬 */
+}
+
+.image-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end; /* 이미지 하단에 정렬 */
+  margin-top: 20px;
+  gap: 60px; /* 이미지 간격*/
+}
+
+.image-item {
+  position: relative;
+}
+
+.length-image {
+  width: 200px; /* 이미지 크기 조정 */
+  height: auto;
+  transition: transform 0.3s, box-shadow 0.3s; /* 부드러운 애니메이션 */
+}
+
+/* @font-face로 폰트 정의 */
+@font-face {
+  font-family: 'MyCustomFont';
+  src: url('../assets/fonts/Jalnan.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.image-text {
+  position: absolute;
+  bottom: -50px;  /* 이미지의 하단에 위치 */
+  left: 50%;
+  transform: translateX(-50%);  /* 중앙 정렬 */
+  color: white;
+  font-size: 18px;
+  font-family: 'MyCustomFont';
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);  /* 가독성을 위한 그림자 */
+}
+
+.length-image:hover {
+  transform: scale(1.1);  /* hover 시 이미지 크기 확대 */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);  /* hover 시 그림자 효과 */
+}
+
+/* 비활성화된 버튼 스타일 (inactive 상태) */
+.inactiveNextButton {
+  background-image: url('../assets/inactiveNextButton.png'); /* 비활성화 버튼 이미지 */
+  background-size: cover; /* 이미지가 버튼 크기에 맞게 커짐 */
+  background-repeat: no-repeat;
+  width: 85px; /* 버튼 크기, 동그란 버튼을 위해 동일한 width, height 사용 */
+  height: 85px; /* 버튼 크기 */
+  cursor: not-allowed; /* 클릭 불가능 */
+  border-radius: 50%; /* 동그라미 모양 */
+  border: none;
+}
+
+/* 활성화된 버튼 스타일 (active 상태) */
+.FinButton {
+  background-image: url('../assets/finishButton.png'); /* 활성화된 버튼 이미지 */
+  background-size: cover; /* 이미지가 버튼 크기에 맞게 커짐 */
+  background-repeat: no-repeat;
+  width: 85px; /* 버튼 크기, 동그란 버튼을 위해 동일한 width, height 사용 */
+  height: 85px; /* 버튼 크기 */
+  cursor: pointer; /* 클릭 가능 */
+  border-radius: 50%; /* 동그라미 모양 */
+  border: none;
+}
+
+/* 버튼 위치 조정 */
+.next-button-container {
+  margin-top: 40px; /* 버튼을 상단에서 더 내려서 위치 조정 */
+  position: relative;
+  top: 100px; /* 추가로 하단으로 이동 */
+}

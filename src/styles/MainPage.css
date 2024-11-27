@@ -1,0 +1,204 @@
+/* Main container */
+.main-container {
+    width: 1600px;      /* 너비 변경 */
+    height: 900px;      /* 높이 변경 */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);  /* 여전히 가운데 정렬 유지 */
+    background-image: url('https://via.placeholder.com/1600x900');
+    background-size: cover;           /* 배경 이미지가 화면을 덮도록 설정 */
+    background-position: center;      /* 배경 이미지가 가운데로 정렬되도록 설정 */
+    
+    /* 모서리 둥글게 */
+    border-radius: 20px; /* 원하는 만큼 둥글게 설정 */
+    
+    /* 그림자 추가 */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
+  }
+
+  /* Outer circle */
+  .outer-circle {
+    width: 114px;
+    height: 114px;
+    position: absolute;
+    background: linear-gradient(180deg, #FFB966 0%, #FFB966 100%);
+    border-radius: 50%;
+  }
+  
+  /* Inner circle */
+  .inner-circle {
+    width: 61.31px;
+    height: 61.31px;
+    left: 26.82px;
+    top: 25.87px;
+    position: absolute;
+  }
+  
+  /* Vertical bar */
+  .vertical-bar {
+    width: 11.5px;
+    height: 61.31px;
+    left: 61.31px;
+    top: 24.91px;
+    position: absolute;
+    transform: rotate(90deg);
+    transform-origin: 0 0;
+    background: white;
+    border-radius: 50%;
+  }
+  
+  /* Horizontal bar */
+  .horizontal-bar {
+    width: 11.5px;
+    height: 61.31px;
+    left: 24.91px;
+    top: 0;
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+  }
+  
+  /* Logo */
+  
+  /* Story Planet Section */
+  .story-planet {
+    width: 391.83px;
+    height: 553.72px;
+    left: 604px;  /* 너비 증가에 따라 수정 */
+    top: 240px;
+    position: absolute;
+  }
+  
+  .story-planet-bg {
+    width: 391.83px;
+    height: 553.72px;
+    position: absolute;
+    background: linear-gradient(180deg, #418DF1 0%, rgba(65, 141, 241, 0) 100%);
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 15px;
+  }
+  
+  .story-title {
+    width: 249px;
+    height: 67.88px;
+    left: 74px;
+    top: 296.46px;
+    position: absolute;
+    text-align: center;
+    color: white;
+    font-size: 25px;
+    font-family: 'Noto Sans', sans-serif;
+    font-weight: 600;
+    line-height: 30px;
+    word-wrap: break-word;
+  }
+  
+  /* Planet Button */
+  .planet-button {
+    width: 59px;
+    height: 58.89px;
+    left: 169px;
+    top: 213.61px;
+    position: absolute;
+    transition: transform 0.3s ease, background 0.3s ease;  /* 호버 시 부드러운 변화 효과 */
+  }
+  
+  .planet-bg {
+    width: 59px;
+    height: 58.89px;
+    position: absolute;
+    background: #FFB966;
+    border-radius: 50%;
+  }
+  /* Planet Button Hover 효과 */
+ .planet-button:hover .planet-bg {
+    background: #FF9F40;  /* 호버 시 색상 변경 */
+  }
+  .planet-button:hover {
+    transform: scale(1.4);  /* 호버 시 버튼 크기 약간 키우기 */
+  }
+  
+  .vertical-line {
+    width: 5.94px;
+    height: 31.73px;
+    left: 45.61px;
+    top: 26.23px;
+    position: absolute;
+    transform: rotate(90deg);
+    transform-origin: 0 0;
+    background: white;
+    border-radius: 50%;
+  }
+  
+  .horizontal-line {
+    width: 5.95px;
+    height: 31.67px;
+    left: 26.77px;
+    top: 13.36px;
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+  }
+  
+/* @font-face로 폰트 정의 */
+@font-face {
+    font-family: 'MyCustomFont';
+    src: url('../assets/fonts/Jalnan.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+  /* .main-title에서 커스텀 폰트 사용 */
+  .main-title {
+    width: 370px;
+    height: 58px;
+    left: 616px;
+    top: 58px;
+    position: absolute;
+    text-align: center;
+    color: #FFE594;
+    font-size: 55px;
+    font-family: 'MyCustomFont', sans-serif;  /* 커스텀 폰트 사용 */
+    font-weight: 400;
+    word-wrap: break-word;
+  }
+  
+  /* Media Queries for Tablet */
+  @media screen and (max-width: 768px) {
+    .main-container {
+      width: 100%;
+      height: auto;
+    }
+  
+    .logo {
+      width: 70%;
+      height: auto;
+      left: 15%;
+      top: 80%;
+    }
+  
+    .story-planet {
+      width: 80%;
+      height: auto;
+      left: 10%;
+      top: 30%;
+    }
+  
+    .story-title {
+      font-size: 20px;
+    }
+  
+    .main-title {
+      font-size: 35px;
+    }
+  
+    .button-circle {
+      width: 80px;
+      height: 80px;
+      left: 50%;
+      top: 80%;
+      transform: translateX(-50%);
+    }
+  }
+  
