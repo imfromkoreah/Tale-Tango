@@ -26,6 +26,7 @@ app.get('/', (req, res) => {
 
 // AI 이야기 생성 엔드포인트
 app.post('/generate-story', async (req, res) => {
+  console.log(`요청 수신: ${new Date().toISOString()}`);
   const { selectedCharacters, selectedBackgrounds, selectedLength } = req.body;
 
   try {
@@ -62,7 +63,7 @@ app.post('/save-story', (req, res) => {
 
   try {
     // 기존 이야기 파일에 덧붙이기
-    fs.appendFileSync(filePath, `\n${storyText}\n`);
+    fs.appendFileSync(filePath, `\n\n${storyText}\n`);
     console.log(`사용자 입력이 ${filePath}에 덧붙여졌습니다.`);
 
     res.json({ message: '스토리가 덧붙여졌습니다.', filePath });

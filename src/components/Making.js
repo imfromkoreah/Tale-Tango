@@ -9,6 +9,7 @@ import nextButtonActive from '../assets/nextButton.png'; // 활성화된 Next �
 import nextButtonInactive from '../assets/inactiveNextButton.png'; // 비활성화된 Next 버튼 이미지
 import finishButtonInactive from '../assets/inactiveFinishButton.png'; // 비활성화된 완료 버튼 이미지
 import finishButtonActive from '../assets/finishButton.png'; // 활성화된 완료 버튼 이미지
+import { useRef } from 'react'; // 추가
 
 import axios from 'axios'; // axios import
 
@@ -21,6 +22,8 @@ const Making = ({ selectedCharacters, selectedBackgrounds, selectedLength }) => 
   const [isNextEnabled, setIsNextEnabled] = useState(false); // Next 버튼 활성화 상태 관리
   const [storyFilePath, setStoryFilePath] = useState(""); // 파일 경로 상태 관리
   const [isStoryGenerated, setIsStoryGenerated] = useState(false); // 이야기 생성 여부 상태 관리
+
+  const hasRequestedStory = useRef(false); // 요청 여부를 추적하는 useRef
 
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
@@ -65,10 +68,16 @@ const Making = ({ selectedCharacters, selectedBackgrounds, selectedLength }) => 
 
   // 생성된 이야기를 서버에서 받아오는 함수 (useCallback을 사용해 재사용 가능하도록 변경)
   const generateStory = useCallback(async () => {
-    if (isStoryGenerated) return; // 이미 이야기가 생성된 경우, 요청하지 않음
-
-    console.log('서버로 선택값 전송:', { selectedCharacters, selectedBackgrounds, selectedLength });
     try {
+      console.log('서버로 선택값 전송:', { selectedCharacters, selectedBackgrounds, selectedLength });
+
+      // 중복 요청을 방지하기 위해 이미 요청했는지 체크
+      if (hasRequestedStory.current) {
+        return; // 요청이 이미 진행 중이면 아무 작업도 하지 않음
+      }
+
+      hasRequestedStory.current = true; // 요청이 시작되었음을 표시
+
       const response = await axios.post('http://localhost:5000/generate-story', {
         selectedCharacters,
         selectedBackgrounds,
@@ -77,16 +86,22 @@ const Making = ({ selectedCharacters, selectedBackgrounds, selectedLength }) => 
 
       // 생성된 이야기와 파일 경로 받기
       setGeneratedStory(response.data.story);
-      setStoryFilePath(response.data.filePath);  // 파일 경로 저장
+      setStoryFilePath(response.data.filePath); // 파일 경로 저장
       setIsStoryGenerated(true); // 이야기 생성 완료 상태 설정
     } catch (error) {
       console.error('Error generating story:', error);
+    } finally {
+      hasRequestedStory.current = false; // 요청이 끝났음을 표시
     }
-  }, [selectedCharacters, selectedBackgrounds, selectedLength, isStoryGenerated]);
+  }, [selectedCharacters, selectedBackgrounds, selectedLength]);
 
+  // generateStory가 중복 호출되지 않도록 수정
   useEffect(() => {
-    generateStory(); // 최초 1회 호출
-  }, [generateStory]); // generateStory가 변경될 때마다 호출
+    // isStoryGenerated가 false일 때만 generateStory 호출
+    if (!isStoryGenerated) {
+      generateStory();
+    }
+  }, [generateStory, isStoryGenerated]);
 
   const handleNextClick = () => {
     navigate('/tango', { state: { storyText, generatedStory } });
@@ -103,7 +118,7 @@ const Making = ({ selectedCharacters, selectedBackgrounds, selectedLength }) => 
 
   const handleRerecordClick = () => {
     setIsRecording(false);
-    setStoryText("녹음 버튼을 눌러 녹음하세요!");
+    setStoryText("녹음 버튼을 눌러 다음에 올 문장을 녹음해요!");
     recognition.stop();
     setIsFinished(false);
     setIsNextEnabled(false);
@@ -145,7 +160,7 @@ const Making = ({ selectedCharacters, selectedBackgrounds, selectedLength }) => 
             className="white-box-text"
             value={storyText}
             onChange={(e) => setStoryText(e.target.value)}
-            placeholder="녹음 버튼을 눌러 다음에 올 문장을 녹음하세요!"
+            placeholder="녹음 버튼을 눌러 다음에 올 문장을 녹음해요!"
           />
         </div>
 
