@@ -19,17 +19,16 @@ const characters = [
   { id: 10, name: '라푼젤', image: require('../assets/character/rapunzel.png') },
   { id: 11, name: '허수아비', image: require('../assets/character/scarecrow.png') },
   { id: 12, name: '백설공주', image: require('../assets/character/snow-white.png') },
-  { id: 13, name: '타잔', image: require('../assets/character/tarzan.png') },  { id: 4, name: '신데렐라', image: require('../assets/character/cinderella.png') },
+  { id: 13, name: '타잔', image: require('../assets/character/tarzan.png') },
   { id: 14, name: '자스민', image: require('../assets/character/jasmine.png') },
   { id: 15, name: '늑대', image: require('../assets/character/wolf.png') },
   { id: 16, name: '도로시', image: require('../assets/character/dorothy.png') },
   { id: 17, name: '인어공주', image: require('../assets/character/mermaid.png') },
-  { id: 18, name: '뮬란', image: require('../assets/character/mulan.png') },
-  { id: 19, name: '빨간모자앤', image: require('../assets/character/redgirl.png') },
-  { id: 20, name: '앨리스', image: require('../assets/character/alice.png') },
-  { id: 21, name: '수줍은왕자님', image: require('../assets/character/cute-prince.png') },
-  { id: 22, name: '마법할머니', image: require('../assets/character/fairy-grandmother.png') },
-  { id: 23, name: '어린왕자', image: require('../assets/character/little-prince.png') },
+  { id: 18, name: '빨간모자앤', image: require('../assets/character/redgirl.png') },
+  { id: 19, name: '앨리스', image: require('../assets/character/alice.png') },
+  { id: 20, name: '수줍은왕자님', image: require('../assets/character/cute-prince.png') },
+  { id: 21, name: '마법할머니', image: require('../assets/character/fairy-grandmother.png') },
+  { id: 22, name: '어린왕자', image: require('../assets/character/little-prince.png') },
 ];
 
 // 랜덤으로 10개의 캐릭터를 뽑는 함수
