@@ -16,10 +16,10 @@ TaleTango는 **AI와 사용자가 메시지를 주고받으며 이야기**를 �
 
 ---
 ## 🛠️ 핵심 기술 소개
-# 1.  Node.js 및 Express 프레임워크를 사용한 RESTful API 웹 어플리케이션
-# 2.  React를 활용한 SPA(Single Page Application) 개발
-# 3.  GPT-3.5-turbo를 활용한 AI 기반 이야기 생성 및 맞춤법 교정 기능 구현 
-# 4.  Axios 사용하여 백엔드와의 비동기 HTTP 요청 (POST 방 JSON 데이터 전송, 이야기 생성 및 저장)
+- **Node.js & Express**: RESTful API 서버 구축을 위한 백엔드 프레임워크 사용.
+- **React 기반 SPA**: 사용자 경험을 높이기 위한 싱글 페이지 애플리케이션 구현.
+- **GPT-3.5-turbo 통합**: AI를 활용한 이야기 생성 및 맞춤법 교정 기능 구현.
+- **Axios를 활용한 비동기 통신**: JSON 기반 POST 요청으로 이야기 생성 및 저장 기능 처리.
 
 ---
 
