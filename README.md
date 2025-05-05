@@ -1,8 +1,8 @@
 # TaleTango: AI와 함께 창작하는 이야기💃🏻🕺
 
 TaleTango는 **AI와 사용자가 메시지를 주고받으며 이야기**를 창작하는 혁신적인 플랫폼입니다.  
-마법 같은 창작 경험을 통해 짧은 동화부터 긴 모험담까지, 나만의 이야기를 만들어보세요!
-[이보경_테일탱고 포트폴리오.pdf](https://github.com/user-attachments/files/20040040/_.pdf)
+마법 같은 창작 경험을 통해 짧은 동화부터 긴 모험담까지, 나만의 이야기를 만들어보세요! <br>
+[이보경_테일탱고 포트폴리오.pdf](https://github.com/user-attachments/files/20040040/_.pdf)<br>
 [이보경_테일탱고_최종.pptx](https://github.com/user-attachments/files/20040042/_._.pptx)
 
 
